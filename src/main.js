@@ -8,14 +8,17 @@ import axios from 'axios' // 引入mock数据，关闭则注释该行
 
 // 引入elmentUI组件
 import ElementUI from 'element-ui'
+import Echarts from 'echarts'
 
 import 'element-ui/lib/theme-chalk/index.css'
 // 全局引入Antd
 import Antd from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.css'
+//import 'ant-design-vue/dist/antd.css'
 
 // 引入公共样式
 import './assets/css/common.css'
+// import './assets/css/global.css'
+
 // 引入阿里巴巴字体图标库
 import './assets/css/iconfont.css'
 
@@ -52,19 +55,21 @@ import {setCookie, getCookie, delCookie} from '@/assets/cookie'
 // userInfo()
 
 // 路由
-import router from './router'
+import router from '@/router'
 
-import App from './App'
+import App from '@/App'
 
-import adapter from './common/adapter'
+import adapter from '@/common/adapter'
 
-import util from './common/util'
+import util from '@/common/util'
 import Moment from 'moment'
-import store from './store/store'
+import store from '@/store/store'
 Vue.prototype.moment = Moment
 Vue.prototype.$axios = axios
+Vue.prototype.$Echarts = Echarts
 Vue.use(Vuex)
 Vue.use(ElementUI)
+Vue.use(Echarts)
 // Vue.use(ElementUI, { size: 'small' })
 
 // Vue.use(Antd)

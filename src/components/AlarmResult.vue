@@ -1,7 +1,7 @@
 <template>
   <div class="alarmResult">
     <el-page-header @back="goBack" content="告警结果"></el-page-header>
-    <alarm-list :obj="params"></alarm-list>
+    <alarm-list :obj="params" v-if="params.id!==''"></alarm-list>
   </div>
 </template>
 
@@ -12,12 +12,13 @@
     components: {AlarmList},
     data() {
 		  return {
-		    id: '',
-        params: {},
+        params: {
+		      id: ''
+        },
       }
     },
     created() {
-		  this.id = this.$route.query.id
+      this.params.id = this.$route.query.id
     },
     mounted() {},
     methods: {

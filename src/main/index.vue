@@ -2,7 +2,7 @@
   <div class="main-page">
     <el-container>
       <el-aside width="230px" id="menuClass">
-        <el-menu :default-active="'1'" :unique-opened="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" :router="true" @select="selectHandle" background-color="rgba(8,58,74,0.7)" text-color="#47AFAE" active-text-color="#02feff">
+        <el-menu :default-active="'1'" :default-openeds="['1']" :unique-opened="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse" :router="true" @select="selectHandle" background-color="rgba(8,58,74,0.7)" text-color="#47AFAE" active-text-color="#02feff">
           <el-menu-item index="/" class="logomenu">
             <template>
               <i><img src="../assets/image/logo.png" width="30"/></i>
@@ -13,22 +13,14 @@
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-s-data"></i>
-              <span slot="title">审计管理</span>
+              <span slot="title">安全审计</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="/audit">审计分析</el-menu-item>
               <el-menu-item index="/rule">规则管理</el-menu-item>
               <el-menu-item index="/alarm">告警管理</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-notebook-1"></i>
-              <span slot="title">日志管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/log">日志查询</el-menu-item>
+              <el-menu-item index="/log">日志管理</el-menu-item>
+              <el-menu-item index="/csganguplist">尼玛管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -82,32 +74,75 @@ export default {
     return {
       isCollapse: false,
       hearderInput: '',
-      time: ''
+      time: '',
+      param:{
+    "pageNum":1,
+    "pageSize":100,
+    "status":"0",
+}
     }
   },
   created () {
-    this.getDict()
+//  this.getDict()
+    
+    setInterval(()=>{
+//  	this.getList(1,100,this.param)
+    },1000)
+    
   },
   mounted () {
   },
   methods: {
+  	// 根据筛选条件查询列表
+      getList(page, pageSize, params) {
+      	
+//      this.loading = true
+//      this.tableData = []
+        params.pageNum = page
+        params.pageSize = pageSize
+        params=this.param
+//      this.currentPage = page
+//      this.pageSize = pageSize
+//      let url = '/abnormalAlarm/getAbnormalList'
+//      this.$axios.post(API + url, params).then(r => {
+          let res = this.$store.state.jk12.data
+          if (res.list.length > 0) { // 有数据
+//          this.tableData = res.list
+//          this.total = res.total
+//console.log('一秒一次')
+          } else { // 无数据
+//          this.tableData = []
+//          this.total = 0
+          }
+//        this.loading = false
+//      }).catch(e => { // 请求出错
+//        this.loading = false
+//        this.$message({
+//          message: '请求列表失败：' + e,
+//          type: 'warning'
+//        })
+//      })
+      },
+
+  	
+  	
     // 获取字典表
     getDict() {
-      this.$axios.get(API + '/abnormalAlarm/getDictInfoList').then(r => {
-        this.$store.state.dict = r.data.data
-        localStorage.setItem('dict', JSON.stringify(r.data.data))
-        // 日志相关
-        this.setLog(r.data.data)
-        // 告警相关
-        this.setAlarm(r.data.data)
-        // 规则相关
-        this.setRule(r.data.data)
-      }).catch(e => {
-        this.$message({
-          message: '请求字典表失败：' + e,
-          type: 'warning'
-        })
-      })
+//    this.$axios.get(API + '/abnormalAlarm/getDictInfoList').then(r => {
+//      this.$store.state.dict = r.data.data
+//      localStorage.setItem('dict', JSON.stringify(r.data.data))
+//      // 日志相关
+//      this.setLog(r.data.data)
+//      // 告警相关
+//      this.setAlarm(r.data.data)
+//      // 规则相关
+//      this.setRule(r.data.data)
+//    }).catch(e => {
+//      this.$message({
+//        message: '请求字典表失败：' + e,
+//        type: 'warning'
+//      })
+//    })
     },
     // 日志相关
     setLog(dict) {

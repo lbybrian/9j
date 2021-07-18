@@ -1,20 +1,20 @@
 <template>
   <div>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" :inline="true" label-width="100px" class="demo-ruleForm" size="small">
+    <el-form :model="ruleForm" ref="ruleForm" :inline="true" label-width="100px" class="demo-ruleForm" size="small">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>告警规则</span>
         </div>
-        <div v-for="(row, index) in ruleForm.rows">
-          <el-form-item>
+        <div v-for="(row, index) in ruleForm.rows" >
+          <el-form-item :prop="'rows.'+index+'.ruleName'" :rules="{ required: true, message: '请输入规则名称', trigger:['blur','change'] }">
             <el-input v-model="row.ruleName" placeholder="规则名称"></el-input>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item :prop="'rows.'+index+'.arr'" :rules="{required: true, message: '所选内容为空', trigger:['blur','change'] }"  >
             <el-cascader style="min-width: 300px" v-model="row.arr" @change="selectInner(row, index)" :options="countArr" collapse-tags clearable placeholder="选择字段与关系"></el-cascader>
           </el-form-item>
 
-          <el-form-item v-if="row.aggregationSign!=='1'">
+          <el-form-item v-if="row.aggregationSign!=='1'" :prop="'rows.'+index+'.targetStrValue'":rules="{required: true, message: '所选内容为空', trigger:['blur','change'] }" >
             <el-input v-model="row.targetStrValue" placeholder="请输入值"></el-input>
           </el-form-item>
           <el-form-item v-if="(row.aggregationSign==='1')&&(row.arr[1]!=='bt')">
@@ -74,15 +74,15 @@
             arr: [],
           }],
         },
-        rules: {
-          name: [
-            { ruleName: true, message: '请输入告警名称', trigger: 'blur' },
-          ],
-        },
       }
     },
     watch: {
       obj: {
+        handler(newValue, oldValue) {
+        },
+        deep: true
+      },
+      obj2: {
         handler(newValue, oldValue) {
         },
         deep: true
@@ -102,14 +102,20 @@
           d.children = this.dict['018']['dataValue']
           return d
         })
+      }else{
+      	this.objArr=[]
+      	
       }
-      if (this.obj2.length > 0) { // 桶外聚合行信息
+      if (this.obj2.length >=1) { // 桶外聚合行信息
         this.obj2Arr = this.obj2.map(d => {
           d.label = d.aggName
           d.value = d.aggName
           d.children = this.dict['018']['dataValue']
           return d
         })
+      }else{
+      	this.obj2Arr=[]
+      	
       }
       this.countArr = this.dict['014']['dataValue'].concat(this.objArr).concat(this.obj2Arr)
     },
@@ -137,6 +143,7 @@
       },
       // 规则下拉
       selectInner(row, index) {
+      	console.log('这是什么啊',row.arr)
         if (row.arr.length > 0) {
           this.ruleForm.rows[index].resultFiledName = row.arr[0]
           this.ruleForm.rows[index].relationSign = row.arr[1]

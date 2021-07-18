@@ -85,7 +85,7 @@
       }
     },
     created() {
-      this.getList(1, 10, {})
+      this.getList(1, 10, this.obj)
     },
     watch: {
       obj: {
@@ -106,9 +106,11 @@
         this.tableData = []
         params.pageNum = page
         params.pageSize = this.pageSize
-        let url = '/abnormalAlarm/getAbnormalList'
-        this.$axios.post(API + url, params).then(r => {
-          let res = r.data.data
+        this.currentPage = page
+        this.pageSize = pageSize
+//      let url = '/abnormalAlarm/getAbnormalList'
+//      this.$axios.post(API + url, params).then(r => {
+          let res = this.$store.state.jk12.data
           if (res.list.length > 0) { // 有数据
             this.tableData = res.list
             this.total = res.total
@@ -117,13 +119,13 @@
             this.total = 0
           }
           this.loading = false
-        }).catch(e => { // 请求出错
-          this.loading = false
-          this.$message({
-            message: '请求列表失败：' + e,
-            type: 'warning'
-          })
-        })
+//      }).catch(e => { // 请求出错
+//        this.loading = false
+//        this.$message({
+//          message: '请求列表失败：' + e,
+//          type: 'warning'
+//        })
+//      })
       },
 
       // 每页几条
@@ -141,11 +143,11 @@
       // 查看
       checkAlarm(row) {
         this.currentId = row.id
-        this.$axios.post(API + '/abnormalAlarm/getAbnormalDetail', {
-          id: row.id
-        }).then(r => {
-          if (r.data.code === 200) {
-            this.detail = r.data.data
+//      this.$axios.post(API + '/abnormalAlarm/getAbnormalDetail', {
+//        id: row.id
+//      }).then(r => {
+          if (this.$store.state.jk13.code === 200) {
+            this.detail = this.$store.state.jk13.data
             console.log(this.detail)
             this.checkVisible = true
           } else {
@@ -154,12 +156,12 @@
               type: 'warning'
             })
           }
-        }).catch(e => {
-          this.$message({
-            message: '请求详情失败：' + e,
-            type: 'warning'
-          })
-        })
+//      }).catch(e => {
+//        this.$message({
+//          message: '请求详情失败：' + e,
+//          type: 'warning'
+//        })
+//      })
       },
       // 处理
       handleAlarm(row) {
@@ -168,61 +170,65 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post(API + '/abnormalAlarm/updateAbnormalStatusById', {
-            id: row.id,
-            status: 1
-          }).then(r => {
-            if (r.data.code === 200) {
+//        this.$axios.post(API + '/abnormalAlarm/updateAbnormalStatusById', {
+//          id: row.id,
+//          status: 1
+//        }).then(r => {
+            if (this.$store.state.jk7.code === 200) {
               this.$message({
                 type: 'success',
                 message: '已处理!'
               });
-              this.getList(1, 10, this.params)
+//            this.getList(1, 10, this.params);
+              this.getList(1, 10, {});
+              this.checkVisible=false
             } else {
               this.$message({
                 type: 'info',
                 message: '处理失败!'
               });
             }
-          }).catch(e => {
-            this.$message({
-              type: 'error',
-              message: '处理报错：' + e
-            });
-          })
-        }).catch(() => {
+//        }).catch(e => {
+//          this.$message({
+//            type: 'error',
+//            message: '处理报错：' + e
+//          });
+//        })
+//      }).catch(() => {
         });
       },
       // 忽略
       ignoreAlarm(row) {
-        this.$confirm('此操作将忽略该日志, 是否继续?', '提示', {
+        this.$confirm('此操作将处理该日志, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post(API + '/abnormalAlarm/updateAbnormalStatusById', {
-            id: row.id,
-            status: 2
-          }).then(r => {
-            if (r.data.code === 200) {
+//        this.$axios.post(API + '/abnormalAlarm/updateAbnormalStatusById', {
+//          id: row.id,
+//          status: 1
+//        }).then(r => {
+            if (this.$store.state.jk7.code === 200) {
               this.$message({
                 type: 'success',
-                message: '已忽略!'
+                message: '已处理!'
               });
-              this.getList(1, 10, this.params)
+//            this.getList(1, 10, this.params);
+              this.getList(1, 10, {});
+              this.checkVisible=false
             } else {
               this.$message({
                 type: 'info',
-                message: '忽略失败!'
+                message: '处理失败!'
               });
             }
-          }).catch(e => {
-            this.$message({
-              type: 'error',
-              message: '忽略报错：' + e
-            });
-          })
-        }).catch(() => {
+//        }).catch(e => {
+//          this.$message({
+//            type: 'error',
+//            message: '处理报错：' + e
+//          });
+//        })
+//      }).catch(() => {
         });
       },
       // 告警详情处理or忽略后，子组件传参
@@ -230,8 +236,14 @@
         this.getList(this.currentPage, this.pageSize, this.obj)
         this.checkVisible = false
       }
-    }
+    },
+      // 告警详情处理or忽略后，子组件传参
+      handleChange(val) {
+        this.getList(this.currentPage, this.pageSize, this.obj)
+        this.checkVisible = false
+      }
 	}
+	
 </script>
 
 <style scoped>

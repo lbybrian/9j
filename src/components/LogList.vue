@@ -124,9 +124,10 @@
         this.tableData = []
         params.pageNum = page
         params.pageSize = pageSize
-        let url = '/logQuery/search/list'
-        this.$axios.post(API + url, params).then(r => {
-          let res = r.data.data
+        this.currentPage = page
+        this.pageSize = pageSize
+        
+          let res = this.$store.state.jk10.data
           if (res.list.length > 0) { // 有数据
             this.tableData = res.list
             this.total = res.total
@@ -135,13 +136,7 @@
             this.total = 0
           }
           this.loading = false
-        }).catch(e => { // 请求出错
-          this.loading = false
-          this.$message({
-            message: '请求列表失败：' + e,
-            type: 'warning'
-          })
-        })
+        }
       },
 
       // 每页几条
@@ -161,11 +156,11 @@
       checkLog(row) {
         this.loading = true
         this.currentId = row.id
-        this.$axios.post(API + '/logQuery/getLogDataById', {
-          id: row.id
-          // id: 'drjjVnQBCUEUMczdTsmL'
-        }).then(r => {
-          let res = r.data.data
+//      this.$axios.post(API + '/logQuery/getLogDataById', {
+//        id: row.id
+//        // id: 'drjjVnQBCUEUMczdTsmL'
+//      }).then(r => {
+          let res = this.$store.state.jk11.data
           if (res.result === 'ignore') { // 忽略
             this.verifyFlag = 'ignore'
             this.verifyTitle = '日志详情'
@@ -179,32 +174,25 @@
           this.loading = false
           this.logDetail = res
           this.checkVisible = true
-        }).catch(e => {
-          this.loading = false
-          this.$message({
-            message: '查看详情失败：' + e,
-            type: 'warning'
-          })
-        })
       },
 
       // 回退操作
       goBack(id) {
-        this.$axios.post(API + '/logOperate/flashBackLog', {
-          id: id
-        }).then(r => {
-          let res = r.data.data
+//      this.$axios.post(API + '/logOperate/flashBackLog', {
+//        id: id
+//      }).then(r => {
+	
+          let res = this.$store.state.jk18.data
           this.verifyFlag = 'ignore'
           this.verifyTitle = '日志回退成功！'
           this.logDetail = res
-        }).catch(e => {
-          this.$message({
-            message: '回退失败：' + e,
-            type: 'warning'
-          })
-        })
+//      }).catch(e => {
+//        this.$message({
+//          message: '回退失败：' + e,
+//          type: 'warning'
+//        })
+//      })
       },
-    }
   }
 </script>
 

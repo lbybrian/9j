@@ -10,14 +10,24 @@ import Rule from '@/components/Rule' // 规则
 import Alarm from '@/components/Alarm' // 告警
 import AlarmResult from '@/components/AlarmResult' // 告警结果
 import AuditResult from '@/components/AuditResult' // 审计结果
+import CsGangUpList from '@/components/CsGangUpList' // 审计结果
+
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
+      path: '/csganguplist',
+      name: 'CsGangUpList',
+      component: CsGangUpList, 
+//    meta:{ShowBgImg:true}
+    },
+    {
       path: '/',
       name: 'Login',
-      component: Login // 登录
+      component: Login, // 登录
+//    meta:{ShowBgImg:true}
     },
     { // 审计模块
       path: '/',
@@ -26,8 +36,20 @@ export default new Router({
       children: [
         {
           path: '/audit',
-          name: 'Audit',
-          component: Audit // 审计分析
+          name: 'audit',
+          component: Audit, // 审计分析
+          children:[
+          	{
+          		path:'auditJs',
+          		name:'AuditJs',
+          		component: ()=>import ('@/components/AuditJs'), // 审计分析
+          	},
+          	{
+          		path:'cycleAuditList',
+          		name:'CycleAuditList',
+          		component: ()=>import ('@/components/CycleAuditList'), // 审计分析
+          	}
+          ]
         },
         {
           path: '/log',

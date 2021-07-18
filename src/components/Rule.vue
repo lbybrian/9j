@@ -17,7 +17,7 @@
                 <el-option label="告警规则" value="2"></el-option>
               </el-select>
             </el-form-item>
-          </div>
+          </div>w
         </el-col>
         <el-col :span="5">
           <div class="grid-content bg-purple">
@@ -57,15 +57,15 @@
 
     <rule-list ref="list" :obj="params"></rule-list>
 
-    <el-dialog title="新增规则" :visible.sync="addRuleVisible" top="2vh" width="80%" @close="handleClose">
+    <el-dialog title="新增规则" v-if="addRuleVisible" :visible.sync="addRuleVisible" top="2vh" width="80%" @close="handleClose">
       <add-rule ref="addRule" @closeAddRule="closeAddRule"></add-rule>
     </el-dialog>
   </div>
 </template>
 
 <script>
-	import RuleList from "./RuleList";
-  import AddRule from "./AddRule";
+	import RuleList from "@/components/RuleList";
+  import AddRule from "@/components/AddRule";
   export default {
 		name: "Rule",
     components: {AddRule, RuleList},
@@ -99,6 +99,12 @@
       // 重置搜索框
       resetForm(formName) {
         this.$refs[formName].resetFields()
+        this.ruleForm = {
+          name: '',
+          type: '',
+          cycleSign: '',
+          status: '',
+        }
         for(let key in this.ruleForm) {
           this.params[key] = this.ruleForm[key]
         }
@@ -111,6 +117,7 @@
       // 子组件传值控制关闭弹框
       closeAddRule(val) {
         this.addRuleVisible = val
+        this.$refs.list.getList(1, 10, this.params)
       },
       // 右上角关闭弹框
       handleClose() {
@@ -126,6 +133,7 @@
     padding: 20px;
     height: 100%;
     overflow-y: auto;
+    margin-bottom: 20px;
   }
   .rule::-webkit-scrollbar {display: none;}
   .rule { -ms-overflow-style: none; }

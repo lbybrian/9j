@@ -13,9 +13,9 @@
         <template slot-scope="scope">
           <div>
             <span>图表名称：{{scope.row.chartName}}, </span>
-            <span>图例：{{scope.row.xAxis}}, </span>
+            <span>图例：{{scope.row.axisX}}, </span>
             <span v-if="scope.row.yAxis">数据值：{{scope.row.yAxis}}</span>
-            <span v-if="!scope.row.yAxis">数据值：{{scope.row.yAxisArr.join(',')}}</span>
+            <span v-if="!scope.row.yAxis">数据值：{{scope.row.axisYArr.join(',')}}</span>
           </div>
         </template>
       </el-table-column>
@@ -40,21 +40,56 @@
 <script>
   export default {
 		name: "ChartList",
+		props:['ruleForm'],
     data() {
 		  return {
         loading: true,
         // 数据列表
         tableData: [],
+        // 饼图
+        pie: [],
+        // 柱状图
+        histogram: [],
+        // 折线图
+        lineChart: [],
         chartVisible: false,
       }
     },
+    watch: {
+      tableData: {
+        handler(newValue, oldValue) {
+          this.$emit('chartList', newValue)
+          console.log('chartList页面',newValue)
+        },
+        deep: true,
+        immediate:true
+      },
+    },
     created() {
 		  this.loading = false
+		  
+		  
+		  
+		  
+		  
+		  
+		  
     },
     mounted() {
       // 监听列表数据变化
-      this.$Bus.$on('chartListData', data => {
-        this.tableData = this.tableData.concat(data)
+      this.$Bus.$on('pie', data => {
+        this.pie = data
+        this.tableData = this.pie.concat(this.histogram).concat(this.lineChart)
+        this.$emit('chartList', this.tableData)
+      })
+      this.$Bus.$on('histogram', data => {
+        this.histogram = data
+        this.tableData = this.pie.concat(this.histogram).concat(this.lineChart)
+        this.$emit('chartList', this.tableData)
+      })
+      this.$Bus.$on('lineChart', data => {
+        this.lineChart = data
+        this.tableData = this.pie.concat(this.histogram).concat(this.lineChart)
         this.$emit('chartList', this.tableData)
       })
     },
@@ -66,6 +101,7 @@
       // 删除
       del(scope) {
         this.tableData.splice(scope.$index, 1)
+        this.$emit('chartList', this.tableData)
       },
     }
 	}

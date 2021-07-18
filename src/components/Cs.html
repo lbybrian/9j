@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<style>
+	.btn-container {
+		margin-top: 40px;
+		text-align: center;
+	}
+	
+	.btn-container .confirm-btn {
+		min-width: 70px;
+	}
+</style>
+</head>
+
+<body>
+<div id="app">
+<el-form :model='formData' :rules='formRules' ref='bidForm'>
+	<el-table :data='formData.productList' @selection-change='handleSelectChange'>
+		<el-table-column type='selection'></el-table-column>
+		<el-table-column label='名称' prop='name'></el-table-column>
+		<el-table-column label='初始价格' prop='initPrice'></el-table-column>
+		<el-table-column label='报价' width='180'>
+			<template slot-scope='scope'>
+				<el-form-item v-if='!scope.row.checked' key='noProp'>
+					<el-input size='small' v-model='scope.row.bidPrice' :disabled='!scope.row.checked' placeholder="<=50"></el-input>
+				</el-form-item>
+				<el-form-item :prop="'productList.' + scope.$index + '.bidPrice'" :rules='formRules.bidPrice' v-else key='hasProp'>
+					<el-input size='small' v-model='scope.row.bidPrice' :disabled='!scope.row.checked' placeholder="<=50"></el-input>
+				</el-form-item>
+			</template>
+		</el-table-column>
+	</el-table>
+</el-form>
+<div class="btn-container">
+	<el-button type='primary' class="confirm-btn" @click='confirmBid'>确认投标</el-button>
+</div>
+</div>
+<script>var app = new Vue({
+	el: '#app',
+	data: {
+		formData: {
+			productList: [{
+				id: 0,
+				name: '土豆',
+				initPrice: 3.2
+			}, {
+				id: 1,
+				name: '西红柿',
+				initPrice: 4.2
+			}],
+		},
+		formRules: {
+			bidPrice: [{
+				validator(rule, value, callback) {
+					if(value === '' || value === undefined) {
+						callback(new Error('请输入投标价格!'));
+					} else if(isNaN(value)) {
+						callback(new Error('请输入数字值!'));
+					} else if(Number(value) > 50 || Number(value) <= 0) {
+						callback(new Error('需大于0，小于等于50'));
+					} else if(/\.\d{4}/.test(value)) {
+						callback(new Error('最多带3位小数'));
+					} else {
+						callback();
+					}
+				},
+				trigger: 'blur'
+			}]
+		},
+		selectArr: []
+	},
+	methods: {
+		// 选中项改变
+		handleSelectChange(arr) {
+			this.selectArr = arr; // 给每项增加一个表示当前是否选中的标志属性
+			this.formData.productList.forEach(item => {
+				let checked = false;
+				arr.forEach(e => {
+					if(e.id === item.id) {
+						checked = true;
+					};
+				});
+				if(checked) {
+					this.$set(item, 'checked', true);
+				} else {
+					this.$set(item, 'checked', false);
+				}
+			});
+		}, // 点击确认
+		confirmBid() {
+			this.$refs.bidForm.validate(valid => {
+				if(valid) {
+					alert(111);
+				}
+			});
+		}
+	}
+});
+</script>
+	
+</body>
+
+</html>

@@ -58,4 +58,210 @@ h1{
   cursor: pointer;
 }
 
+/*全局修改el-ui样式*/
+.el-tabs__nav-wrap{
+	padding: 0 20px;
+    height: 40px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    line-height: 40px;
+    display: inline-block;
+    list-style: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #303133;
+    position: relative;
+
+}
+.el-tabs__content{
+	height: calc(100% - 40px);
+}
+.el-tabs__header{
+	 border-bottom: 1px solid #E4E7ED;
+    background-color: gainsboro;  /*修改背景色*/
+
+}
+ .el-tabs__item:hover {
+    color: #FFDEAD;  /*//修改鼠标移动到表头时候字体颜色，默认淡蓝色*/
+    cursor: pointer;  /*//鼠标移动到表头时候鼠标样式，默认小手*/
+  }
+.el-tabs__item.is-active {
+	/*修改激活表头字体颜色，默认是蓝色*/
+    /*color: #FFDEAD;*/ 
+    color: red; 
+  }
+.el-table .el-row .el-col4.is-active{
+}
+  .el-table__body tr.current-row>td {
+        background: #f57878 !important;
+    }
+.el-table{
+  	/*color: white;*/
+  	/*background-color: skyblue;*/
+	
+	/*color: #47AFAE;
+  border: 1px solid #244a81;
+  background: linear-gradient(#082031, rgba(8,58,74,0.7));
+  box-shadow: 0 0 20px rgba(9,169,191,0.5);*/
+}
+/*.el-table .el-table__row .el-table_3_column_17 .cell{
+	overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2!important;    
+  -webkit-box-orient: vertical; 
+color: red;
+}*/
+.el-table tr td .cell{
+	overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /*可以显示的行数，超出部分用...表示 */
+  -webkit-box-orient: vertical; 
+/*color: red;*/
+}
+.el-table td, .el-table th,.el-table tr{
+    /*border: 1px solid #244a81;
+    background: linear-gradient(rgba(8,58,74,0));
+    box-shadow: 0 0 20px rgba(9,169,191,0);*/
+	/*color: white;*/
+    /*overflow: hidden;*/
+  }
+  .el-table th{
+  	/*color: white;*/
+  	/*color: #47AFAE;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 5px;
+    border: 1px solid #244a81;
+    border-radius: 4px;
+    background: linear-gradient(#082031, rgba(8,58,74,0.7));
+    box-shadow: 0 0 20px rgba(9,169,191,0.5);
+    overflow: hidden;
+    cursor: pointer;*/
+  }
+  .el-table th:hover{
+  	/*color: #02feff;*/
+  }
+  .el-table td{
+  	/*font-size: 14px;*/
+  }
+  .el-tabs__content{
+  	/*background-color: skyblue;*/
+    /*background: linear-gradient(#082031, rgba(8,58,74,0.7));*/
+  	
+  }
+  /*.el-tabs{
+  	background-color: #082031;
+  	
+  }*/
+  .el-tabs__item{
+  	/*color: white;
+  	border-radius: 4px;*/
+  /*border: 1px solid #00ffff;*/
+  }
+  
+  /*.el-pagination{
+  color: #84E0ED;
+  background: #032c4c;
+  border: 1px solid #30668A;
+  box-shadow: 0 0 5px #30668A inset;
+  margin-bottom: 20px;
+}
+.el-pagination.active{
+  color: #cccccc;
+}*/
+.el-button{
+	/*color: #47AFAE;*/
+  /*border: 1px solid #47AFAE;
+  
+  /*background-color: greenyellow;*/
+  /*border-radius: 4px;*/
+  /*border: 1px solid #00ffff;
+  color: darkslateblue;*/
+}
+.el-button.active{
+  color: #02feff;
+  /*border: 1px solid #02feff;*/
+}
+/*.el-row{
+  background: linear-gradient(#082031, rgba(8,58,74,0));
+  box-shadow: 0 0 20px rgba(9,169,191,0);
+}
+
+.el-col,.el-col-6,.el-card,.el-card__body{
+  	color: #47AFAE;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    background: linear-gradient(rgba(8,58,74,0));
+    overflow: hidden;
+    cursor: pointer;
+  }*/
+.el-dialog{
+  	/*background: rgba(14,238,252,0.1);*/
+}
+.el-dialog__body{
+	background: rgba(14,238,252,0.1);
+}
+/*.el-col:hover{
+  	color: #02feff;
+}
+.el-col.active{
+  	color: #02feff;
+}*/
+/*
+.el-button--primary {
+  background: -webkit-linear-gradient(left, #31aaff, #156cfb);
+}
+.el-button--danger {
+  background: -webkit-linear-gradient(left, #ff8e78, #fc4545);
+}
+
+.el-col{
+  background-color:orange;
+}
+.el-row{
+  background-color: #008000;
+}
+.el-table{
+  background-color: yellow;
+  border: 1px solid black;
+  color: darkblue;
+  
+}
+.el-table-column{
+  background-color: yellow;
+  border: 1px solid green;
+  color: red;
+}
+*/
+.el-form{
+	/*padding: 20px;
+	color: #47AFAE;
+  background:(rgba(8,58,74,0.7));
+  box-shadow: 0 0 20px rgba(9,169,191,0.5);*/
+}
+/*.label{
+	color: #47AFAE;
+}*/
+.el-form-item{
+	color: #47AFAE;
+  /*background: linear-gradient(#082031, rgba(8,58,74,1));*/
+}
+.el-form-item__label{
+	/*color: blue;*/
+  /*background: linear-gradient(#082031, rgba(8,58,74,1));*/
+}
+.el-card{
+	/*color: #47AFAE;
+  background: linear-gradient(#082031, rgba(8,58,74,0.7));*/
+  /*box-shadow: 0 0 20px rgba(9,169,191,0.5);*/
+}
+/*
+.export {
+  background: -webkit-linear-gradient(left, #00ffff, #00c6ff);
+  border: 1px solid #00ffff;
+  color: white;
+}*/
+
 

@@ -5,8 +5,8 @@
       <el-step title="步骤 2"></el-step>
     </el-steps>
 
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="small">
-      <el-row v-if="active===1">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="small" autocomplete =‘true’>
+      <el-row v-show="active===1">
         <el-col :span="8">
           <el-form-item label="规则名称" prop="name" required>
             <el-input v-model="ruleForm.name"></el-input>
@@ -27,16 +27,20 @@
         </el-col>
       </el-row>
 
-      <el-row v-if="active===1">
+      <el-row v-show="active===1">
         <el-col :span="24">
-          <el-form-item label="设置周期统计标识" prop="cycleSign" label-width="150px">
+          <el-form-item label="设置周期统计标识" props="type" label-width="150px">
             <el-radio-group v-model="ruleForm.cycleSign" @change="changeCycle">
-              <el-radio label="2">否</el-radio>
+              <el-radio label="2" v-if="ruleForm.type!=='2'">否</el-radio>
               <el-radio label="1">是</el-radio>
             </el-radio-group>
             <span v-if="ruleForm.cycleSign==='1'" style="margin-left: 10px;">
-              <span>时间范围： </span>
+              <!--<span>时间范围： </span>
+              <el-date-picker  v-model="ruleForm.showTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="right" ></el-date-picker>-->
+              <el-form-item label="时间范围" prop="showTime" :rules="{ required: true, message: '所填内容为空', trigger:['blur','change'] }">
               <el-date-picker v-model="ruleForm.showTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="right"></el-date-picker>
+          		</el-form-item>
+              
               <span>频率： </span>
           <el-input-number v-model="ruleForm.cycleStatTast.cycleNum" controls-position="right" @change="handleChange" :min="1"></el-input-number>
           <el-select v-model="ruleForm.cycleStatTast.cycleUnit" placeholder="请选择" style="width:100px;">
@@ -48,25 +52,27 @@
         </el-col>
       </el-row>
 
-      <el-form-item v-if="active===1" label="规则">
-        <configuration @config="config"></configuration>
+      <el-form-item v-show="active===1" label="规则">
+        <configuration @config="config" :ruleForm="ruleForm" :rules="ruleForm.formData" ref="Configuration"></configuration>
       </el-form-item>
 
-      <div v-if="active===2&&ruleForm.type==='1'">
-        <el-form-item label="已配置图表" prop="chartList" v-if="ruleForm.type==='1'&&ruleForm.queryRuleJson.bucketBO.aggregationBOList[0].arr.length>0">
+      <div v-show="active===2&&ruleForm.type==='1'">
+        <el-form-item label="已配置图表" prop="chartList" >
+        <!--<el-form-item label="已配置图表" prop="chartList" v-if="ruleForm.type==='1'&&ruleForm.queryRuleJson.bucketBO.aggregationBOList[0].arr.length>0">-->
           <chart-list @chartList="chartList"></chart-list>
         </el-form-item>
 
-        <el-form-item label="图文配置" v-if="ruleForm.type==='1'&&ruleForm.queryRuleJson.bucketBO.aggregationBOList[0].arr.length>0">
+        <el-form-item label="图文配置" >
+        <!--<el-form-item label="图文配置" v-if="ruleForm.type==='1'&&ruleForm.queryRuleJson.bucketBO.aggregationBOList[0].arr.length>0">-->
           <el-tabs v-model="activeTab" type="card" @tab-click="changeTab">
             <el-tab-pane label="饼图" name="pie" v-if="ruleForm.type==='1'">
-              <pie v-if="activeTab==='pie'" :obj="ruleForm.queryRuleJson.bucketBO"></pie>
+              <pie v-show="activeTab==='pie'" :obj="ruleForm.queryRuleJson.bucketBO"></pie>
             </el-tab-pane>
             <el-tab-pane label="柱状图" name="histogram" v-if="ruleForm.type==='1'">
-              <histogram v-if="activeTab==='histogram'" :obj="ruleForm.queryRuleJson.bucketBO"></histogram>
+              <histogram v-show="activeTab==='histogram'" :obj="ruleForm.queryRuleJson.bucketBO"></histogram>
             </el-tab-pane>
             <el-tab-pane label="折线图" name="line" v-if="ruleForm.type==='1'">
-              <line-chart v-if="activeTab==='line'" :obj="ruleForm.queryRuleJson.bucketBO"></line-chart>
+              <line-chart v-show="activeTab==='line'" :obj="ruleForm.queryRuleJson.bucketBO"></line-chart>
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
@@ -79,15 +85,14 @@
           </el-radio-group>
         </el-form-item>
       </div>
-
-      <div v-if="active===2&&ruleForm.type==='2'">
+      <div v-show="active===2&&ruleForm.type==='2'">
         <add-alarm-rule :obj="ruleForm.queryRuleJson.bucketBO" :obj2="ruleForm.queryRuleJson.aggOutList" @alarmRule="alarmRule"></add-alarm-rule>
       </div>
 
       <el-form-item class="center">
         <!--<el-button size="small" @click="resetForm('ruleForm')">取 消</el-button>-->
         <el-button v-if="active>1" size="small" type="default" @click="preStep()">上一步</el-button>
-        <el-button v-if="active<2" size="small" type="primary" @click="nextStep()">下一步</el-button>
+        <el-button v-if="active<2" size="small" type="primary" @click="nextStep('ruleForm')">下一步</el-button>
         <el-button v-if="active===2" size="small" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       </el-form-item>
     </el-form>
@@ -99,16 +104,16 @@
 	import Pie from "@/components/Pie";
   import Histogram from "@/components/Histogram";
   import LineChart from "@/components/LineChart";
-  import Grid from "@/components/Grid";
   import ChartList from "@/components/ChartList";
   import Configuration from "@/components/Configuration";
   import AddAlarmRule from "@/components/AddAlarmRule";
   export default {
 		name: "AddRule",
-    components: {AddAlarmRule, Configuration, ChartList, Grid, LineChart, Histogram, Pie},
+    components: {AddAlarmRule, Configuration, ChartList, LineChart, Histogram, Pie},
     props: [],
     data() {
 		  return {
+		  	checkSign:false,
 		    // 步骤
         active: 1,
         ruleForm: {
@@ -117,6 +122,8 @@
           cycleSign: '2',
           ruleDesc: '',
           showTime: [],
+          //子组件表单
+          formData:{},
           // 规则
           queryRuleJson: {
             // and逻辑
@@ -136,6 +143,7 @@
                 arr: [],
               }]
             },
+            
           },
           cycleStatTast: {
             cycleUnit: 'minute',
@@ -158,6 +166,7 @@
             maxValue: 0,
             minValue: 0
           }],
+          arctList: []
         },
         // 保存时传参对象
         params: {},
@@ -165,6 +174,7 @@
           name: [
             { required: true, message: '请输入规则名称', trigger: 'blur' },
           ],
+          showTime:{ required: true, message: '请选择时间范围', trigger:['blur','change'] },
         },
         // 日期快捷键
         pickerOptions: {
@@ -201,79 +211,10 @@
       }
     },
     created() {
-		  let object = {
-        name: "用户登录异常告警规则配置",
-        type: "2",
-        cycleSign: "1",
-        ruleDesc: "用户登录异常告警规则配置",
-        queryRuleJson: {
-          "queryANDList": [{
-            "fieldName": "systemSign",
-            "relationSign": "eq",
-            "targetValue": 1
-          }, {
-            "fieldName": "operationType",
-            "relationSign": "eq",
-            "targetValue": 4
-          }, {
-            "fieldName": "logType",
-            "relationSign": "eq",
-            "targetValue": 2
-          }],
-          "timeRangeSign": "oneYear",
-          "bucketBO": {
-            "fieldName": "operationUserId",
-            "bucketName": "user_id_bucket",
-            "type": "normal",
-            "aggregationBOList": [{
-              "fieldName": "_id",
-              "aggName": "bucketnei_id_count",
-              "aggSign": "count"
-            }]
-          },
-          "aggOutList": [{
-            "fieldName": "_id",
-            "aggName": "user_sum",
-            "aggSign": "count"
-          }]
-        },
-        cycleStatTast: {
-          "cycleUnit": "minute",
-          "cycleNum": "2",
-          "startTime": "2020-08-27 00:00:00",
-          "endTime": "2021-08-27 00:00:00"
-        },
-        aardList: [{
-          "ruleName": "十分钟登录次数超过5次",
-          "bucketName": "user_id_bucket",
-          "resultFiledName": "bucketnei_id_count",
-          "aggregationSign": "1",
-          "relationSign": "gt",
-          "alarmRank": 1,
-          "targetNumValue": 5
-        },
-          {
-            "ruleName": "十分钟登录次数超过10次",
-            "bucketName": "user_id_bucket",
-            "resultFiledName": "bucketnei_id_count",
-            "aggregationSign": "1",
-            "relationSign": "gt",
-            "alarmRank": 1,
-            "targetNumValue": 10
-          },
-          {
-            "ruleName": "十分钟登录次数超过20次",
-            "bucketName": "user_id_bucket",
-            "resultFiledName": "bucketnei_id_count",
-            "aggregationSign": "1",
-            "relationSign": "gt",
-            "alarmRank": 1,
-            "targetNumValue": 20
-          }
-        ]
-      }
+    	
     },
     mounted() {
+//  	console.log(this.checkForm('ruleForm'))
     },
     watch: {
 		  // 监听表单
@@ -287,80 +228,138 @@
           }
         },
         deep: true
+      },
+      formData: {
+        handler(newValue, oldValue) {
+          if (newValue.type === '2') { // 如果是告警规则
+            newValue.cycleSign = '1' // 那么必须是周期性统计
+            this.activeTab = '' // 告警规则仅显示表格
+          } else {
+            this.activeTab = 'pie'
+          }
+        },
+        deep: true
       }
     },
     methods: {
+    	csFn(){
+      	this.active = 2;
+      	alert('测试函数已执行')
+      },
 		  // 上一步
-      preStep() {
-        if (this.active-- < 0) this.active = 0
-        this.ruleForm.queryRuleJson.bucketBO.aggregationBOList = [{
-          fieldName: '',
-          aggName: '',
-          aggSign: '',
-          arr: [],
-        }]
-      },
+      preStep() {this.active=1},
       // 下一步
-      nextStep() {
-        if (this.active++ > 2) this.active = 0
-      },
-      // 是否周期性单选
-      changeCycle(val) {
-        if (val === '2') { // 2否  1是
-          this.ruleForm.showTime = []
-          this.ruleForm.cycleStatTast = {
-            cycleUnit: 'minute',
-            cycleNum: 1,
-            startTime: '',
-            endTime: ''
-          }
-        }
-      },
-      // configuration组件接收的值
-      config(val) {
-        for(let key in val) {
-          this.ruleForm.queryRuleJson[key] = val[key]
-        }
-      },
-      // 审计图文组件接收的值
-      chartList(val) {
-        this.ruleForm.queryRuleJson.bucketBO.aggregationBOList = val
-      },
-      // 告警规则组件接收的值
-      alarmRule(val) {
-        this.ruleForm.aardList = val.rows
+      nextStep(fm){
+    		let list =[]
+    		list.push(
+    			this.checkForm(fm),
+    			this.$refs.Configuration.checkForm('formData'),
+    			this.$refs.Configuration.checkForm('formData.bucketBO'),
+    			this.$refs.Configuration.checkForm('formData.obj'),
+    		)
+    		Promise.all(list).then(()=>{
+//  			this.checkSign=true
+      			this.active=2
+      		this.$message.success('验证---通过！请点击下一步')
+//  			this.$message.success('z验证---成功',this.checkSign)
+//    	checkSign:false,//子表单验证标识
+    		}).catch(()=>{
+//  			this.$message.error('z验证---失败',this.checkSign)
+      		this.$message.error('请填写必填项！')
+    			return false
+    		})
+    	},
+//    nextStep(fm) {
+//    	console.log(1111111111111111)
+//    		this.checkForm(fm)
+//    	console.log(2222222222)
+//    		this.$refs.Configuration.submitForm2()
+//    	console.log(333333333333333)
+//    	return new Promise((resolve,reject)=>{
+//    	console.log(44444444444444)
+//    		if(this.checkSign&&this.$refs.Configuration.checkSign){
+//    			resolve()
+////    			this.active=2
+//    		}else{
+//    	console.log(55555555555555)
+//    			reject()
+//    		}
+//    	})
+//    	.then(()=>{
+//    		this.active=2
+//						console.log(666666,this.active)
+//    	})
+//    },
+      //规则验证
+      checkForm(fm){
+      	return new Promise((resolve,reject)=>{
+      		this.$refs[fm].validate(valid=>{
+      			if(valid){
+      				resolve(this.checkSign=true)
+      			}else{
+      				reject()
+      			}
+      		})
+      	})
+//    	.then(()=>{
+//    		this.$message.success('验证---通过！请点击下一步')
+//    	})
+      	.catch(()=>{this.$message.error('验证---失败！')})
+//    	.then(()=>{this.$message.success('验证---通过！')})
+//    	.catch(()=>{this.$message.error('验证---失败！')})
+//    	.catch(()=>{alert('去改bug，谢谢')})
       },
 		  // 保存规则
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) { // 验证必填信息通过
-            if (this.ruleForm.showTime.length > 0) {
-              this.ruleForm.cycleStatTast.startTime = this.moment(this.ruleForm.showTime[0]).format("YYYY-MM-DD HH:mm:ss")
-              this.ruleForm.cycleStatTast.endTime = this.moment(this.ruleForm.showTime[1]).format("YYYY-MM-DD HH:mm:ss")
-            }
-            for(let key in this.ruleForm) {
-              this.params[key] = this.ruleForm[key]
-            }
-            this.$axios.post(API + '/analyzeRule/addAnalyzeRule', this.params).then(r => {
-              console.log(r)
-              this.$message({
-                message: '保存成功！',
-                type: 'success'
-              })
-            }).catch(e => {
-              this.$message({
-                message: '保存失败：' + e,
-                type: 'warning'
-              })
-            })
-          } else {
-            this.$message({
-              message: '请填写必填信息',
-              type: 'warning'
-            })
-            return false
-          }
-        });
+//    	let formList=[];
+//    	list.push(
+      		this.checkForm('ruleForm')
+//    	);
+					Promise.then(()=>{
+						this.$message.success('验证通过！！！')
+					}).catch(()=>{
+						this,$message.error('验证失败！！！')
+					})
+					
+//      this.$refs[formName].validate((valid) => {
+//        if (valid) { // 验证必填信息通过
+//          if (this.ruleForm.showTime.length > 0) {
+//            this.ruleForm.cycleStatTast.startTime = this.moment(this.ruleForm.showTime[0]).format("YYYY-MM-DD HH:mm:ss")
+//            this.ruleForm.cycleStatTast.endTime = this.moment(this.ruleForm.showTime[1]).format("YYYY-MM-DD HH:mm:ss")
+//          }
+//          for(let key in this.ruleForm) {
+//            this.params[key] = this.ruleForm[key]
+//          }
+////          this.$axios.post(API + '/analyzeRule/addAnalyzeRule', this.params).then(r => {
+////            console.log(r)
+//
+//						if(this.$store.state.jk5.code===200){
+//            this.$message({
+//              message: '保存成功！',
+//              type: 'success'
+//            })
+//            this.$emit('closeAddRule', false)
+//						}else{
+//							this.$message({
+//              message: '保存失败！',
+//              type: 'error'
+//            })
+//						}
+////            this.$emit('closeAuditRule', false)
+////          }).catch(e => {
+////            this.$message({
+////              message: '保存失败：' + e,
+////              type: 'warning'
+////            })
+////          })
+//        }else {
+//          this.$message({
+//            message: '请填写必填信息',
+//            type: 'warning'
+//          })
+//          return false
+//        }
+//     })
       },
       // 取消规则
       resetForm(formName) {
@@ -413,6 +412,37 @@
           }],
         }
       },
+      // 是否周期性单选
+      changeCycle(val) {
+        if (val === '2') { // 2否  1是
+          this.ruleForm.showTime = []
+          this.ruleForm.cycleStatTast = {
+            cycleUnit: 'minute',
+            cycleNum: 1,
+            startTime: '',
+            endTime: ''
+          }
+        }
+      },
+      // configuration组件接收的值
+      config(val) {
+        for(let key in val) {
+          this.ruleForm.queryRuleJson[key] = val[key]
+//        this.ruleForm.formData = val
+//console.log(val,1111111111111111,this.ruleForm.formData)
+        }
+      },
+      // 审计图文组件接收的值
+      chartList(val) {
+        this.ruleForm.arctList = val
+        console.log('图文事件传值',this.ruleForm.arctList)
+        
+      },
+      // 告警规则组件接收的值
+      alarmRule(val) {
+        this.ruleForm.aardList = val.rows
+      },
+      
       // 周期变化
       handleChange(val) {
         console.log(val)

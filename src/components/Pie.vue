@@ -8,12 +8,12 @@
       <el-col :span="8">
         <el-row>
           <el-col :span="12">
-            <div class="checkImg checked" @click="checkImg('cake', 0)">
+            <div class="checkImg checked" @click="checkImg(11, 0)">
               <img src="../assets/image/u707.png" width="100">
             </div>
           </el-col>
           <el-col :span="12">
-            <div class="checkImg" @click="checkImg('loop', 1)">
+            <div class="checkImg" @click="checkImg(12, 1)">
               <img src="../assets/image/u708.png" width="100">
             </div>
           </el-col>
@@ -23,14 +23,14 @@
       <el-col :span="12">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" size="small">
           <el-form-item label="图表名称" prop="chartName" style="width: 315px;">
-            <el-input v-model="ruleForm.chartName" placeholder="请输入图表名称"></el-input>
+            <el-input v-model="ruleForm.chartName" placeholder="请输入图表名称" :disabled="noSelect"></el-input>
           </el-form-item>
-          <el-form-item label="图例" prop="xAxis">
+          <el-form-item label="X轴值" prop="axisX">
             <span>{{obj.bucketName}}</span>
           </el-form-item>
-          <el-form-item label="数据值" prop="yAxis">
-            <el-select v-model="ruleForm.yAxis" placeholder="请选择数据值">
-              <el-option v-for="item in obj.aggregationBOList" :key="item.aggName" :label="item.aggName" :value="item.aggName"></el-option>
+          <el-form-item label="数据值" prop="axisYArr">
+            <el-select v-model="ruleForm.axisYArr" multiple placeholder="请选择数据值">
+              <el-option v-for="item in obj.aggregationBOList" :disabled="noSelect" :key="item.aggName" :label="item.aggName" :value="item.aggName"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="center">
@@ -49,13 +49,14 @@
     props: ['obj'],
     data() {
 		  return {
+		  	noSelect:false,
         ruleForm: {
-          chartTemplateId: '11',
+          chartTemplateId: 11,
           charType: 1,
           chartName: '',
-          xAxis: this.obj.bucketName,
+          axisX: this.obj.bucketName,
           yAxis: '',
-          yAxisArr: []
+          axisYArr: []
         },
         rules: {
           chartName: [
@@ -72,6 +73,7 @@
     watch: {
 		  obj: {
         handler(newValue, oldValue) {
+          this.ruleForm.axisX =  newValue.bucketName
         },
         deep: true
       }
@@ -85,21 +87,21 @@
           if (valid) {
             // 添加数据到已配置图表chartList组件
             let json = {}
+            this.ruleForm.axisYArr[0] = this.ruleForm.yAxis
             for(let key in this.ruleForm) {
               json[key] = this.ruleForm[key]
             }
-            this.ruleForm.xAxis = this.obj.bucketName
-            this.ruleForm.yAxisArr[0] = this.ruleForm.yAxis
             this.chartListData.push(json)
-            this.$Bus.$emit('chartListData', this.chartListData)
+            this.$Bus.$emit('pie', this.chartListData)
             this.ruleForm = {
-              chartTemplateId: '11',
+              chartTemplateId: 11,
               charType: 1,
               chartName: '',
-              xAxis: this.obj.bucketName,
+              axisX: this.obj.bucketName,
               yAxis: '',
-              yAxisArr: []
+              axisYArr: []
             }
+            this.noSelect=true
           } else {
             return false
           }
@@ -113,6 +115,7 @@
       checkImg(type, index) {
         $('.checkImg').removeClass('checked')
         $('.checkImg').eq(index).addClass('checked')
+        this.ruleForm.chartTemplateId = type
       },
     }
 	}

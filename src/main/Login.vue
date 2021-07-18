@@ -1,22 +1,24 @@
 <template>
-  <el-row>
-    <el-col :span="5" :offset="8">
-      <div class="login">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="ruleForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="pwd">
-            <el-input type="password" v-model="ruleForm.pwd"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="login('ruleForm')">立即登录</el-button>
-            <el-button @click="reset('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-col>
-  </el-row>
+	<div class="login">
+	  <el-row>
+	    <el-col :span="5" :offset="8">
+	      <div class="login_box">
+	        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+	          <el-form-item label="用户名" prop="username">
+	            <el-input v-model="ruleForm.username"></el-input>
+	          </el-form-item>
+	          <el-form-item label="密码" prop="pwd">
+	            <el-input type="password" v-model="ruleForm.pwd"></el-input>
+	          </el-form-item>
+	          <el-form-item>
+	            <el-button type="primary" @click="login('ruleForm')">立即登录</el-button>
+	            <el-button @click="reset('ruleForm')">重置</el-button>
+	          </el-form-item>
+	        </el-form>
+	      </div>
+	    </el-col>
+	  </el-row>
+	</div>
 </template>
 
 <script>
@@ -64,6 +66,14 @@ export default {
 
 <style scoped>
 .login{
+	width: 100%;
+	height: 100%;
+	 background-color: rgba(14,238,252, 0.1);
+    background-image: url("../assets/image/bg.png");
+    background-size: 100% 100%;
+    background-repeat: round;
+}
+.login_box{
   margin-top: 30%;
 }
 </style>

@@ -26,9 +26,9 @@ export default {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    /*background-color: rgba(14,238,252, 0.1);*/
+    /*background-color: rgba(14,238,252, 0.1);
     background-image: url("./assets/image/bg.png");
     background-size: 100% 100%;
-    background-repeat: round;
+    background-repeat: round;*/
   }
 </style>

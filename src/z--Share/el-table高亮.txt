@@ -1,0 +1,20 @@
+点击某个单元格背景高亮：el-table的cell-click事件
+绑定事件：@cell-click="ss"
+源码：
+ss(row,col,cell,e){
+    		if(this.highlight){//是否高亮true
+    			cell.style.backgroundColor="#02feff"
+    			this.highlight=false
+    		}else{
+    			cell.style.backgroundColor="blue"
+	  			this.highlight=true
+    			
+    		}
+//  		this.highlight=!this.highlight
+//  		if(cell.style.backgroundColor=="#02feff"){
+//	    		cell.style.backgroundColor="blue"
+//  		}else{
+//  			cell.style.backgroundColor="#02feff"
+//  		}
+    		console.log('sssssssssssssssssssssssssss',row,col,cell,e)
+    	},

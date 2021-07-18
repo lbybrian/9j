@@ -53,7 +53,7 @@
 </template>
 
 <script>
-	import AlarmList from "./AlarmList";
+	import AlarmList from "@/components/AlarmList";
   export default {
 		name: "Alarm",
     components: {AlarmList},
